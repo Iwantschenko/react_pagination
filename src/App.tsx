@@ -5,11 +5,17 @@ import { Pagination } from './components/Pagination';
 
 const DEFAULT_SELECTED_PAGE_NUMBER = 1;
 
-type ItemsPerPage = 3 | 5 | 10 | 20;
+const ItemsPerPage = {
+  THREE: 3,
+  FIVE: 5,
+  TEN: 10,
+  TWENTY: 20,
+};
+
 const items = getNumbers(1, 42).map(n => `Item ${n}`);
 
 export const App: React.FC = () => {
-  const [currentPerPage, setCurrentPerPage] = useState<ItemsPerPage>(5);
+  const [currentPerPage, setCurrentPerPage] = useState(ItemsPerPage.FIVE);
   const [selectedPage, setSelectedPage] = useState<number>(
     DEFAULT_SELECTED_PAGE_NUMBER,
   );
@@ -32,20 +38,21 @@ export const App: React.FC = () => {
         <div className="col-3 col-sm-2 col-xl-1">
           <select
             onChange={event => {
-              setCurrentPerPage(
-                Number(event.currentTarget.value) as ItemsPerPage,
-              );
+              setCurrentPerPage(Number(event.target.value));
               setSelectedPage(DEFAULT_SELECTED_PAGE_NUMBER);
             }}
             data-cy="perPageSelector"
             id="perPageSelector"
             className="form-control"
-            defaultValue="5"
+            defaultValue={ItemsPerPage.FIVE}
           >
-            <option value="3">3</option>
-            <option value="5">5</option>
-            <option value="10">10</option>
-            <option value="20">20</option>
+            {Object.values(ItemsPerPage).map(value => {
+              return (
+                <option key={value} value={value}>
+                  {value}
+                </option>
+              );
+            })}
           </select>
         </div>
 
